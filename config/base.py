@@ -25,7 +25,7 @@ class Base(BaseSettings):
 
     PROJECT_NAME: str
 
-    POSTGRES_SERVER: str
+    POSTGRES_HOST: str
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
@@ -39,7 +39,7 @@ class Base(BaseSettings):
             scheme="postgresql",
             user=values.get("POSTGRES_USER"),
             password=values.get("POSTGRES_PASSWORD"),
-            host=values.get("POSTGRES_SERVER"),  # type: ignore
+            host=values.get("POSTGRES_HOST"),  # type: ignore
             path=f"/{values.get('POSTGRES_DB') or ''}",
         )
 
