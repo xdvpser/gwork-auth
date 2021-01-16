@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.api import router
+from app.db.session import database
 from config.settings import settings
 
 app = FastAPI(
@@ -21,3 +22,13 @@ if settings.BACKEND_CORS_ORIGINS:
     )
 
 app.include_router(router, prefix="/api/auth")
+
+
+@app.on_event("startup")
+async def startup():
+    await database.connect()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()

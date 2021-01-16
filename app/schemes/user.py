@@ -1,45 +1,22 @@
-from datetime import datetime
-from typing import Optional
-
-from pydantic import UUID4, BaseModel
+from fastapi_users import models
+from pydantic import validator
 
 
-class UserRegister(BaseModel):
-    username: str
-    password: str
-
-
-class UserLogin(UserRegister):
+class User(models.BaseUser):
     pass
 
 
-class UserCreate(BaseModel):
-    username: str
-    password: str
-    is_admin: bool = False
+class UserCreate(models.BaseUserCreate):
+    @validator("password")
+    def valid_password(cls, password: str):
+        if len(password) < 8:
+            raise ValueError("Password should be at least 8 characters")
+        return password
 
 
-class UserUpdate(BaseModel):
-    username: Optional[str] = None
-    password: Optional[str] = None
+class UserUpdate(User, models.BaseUserUpdate):
+    pass
 
 
-class UserInDBBase(BaseModel):
-    id: Optional[UUID4] = None
-    username: Optional[str] = None
-    is_active: Optional[bool] = True
-    is_admin: Optional[bool] = False
-
-    class Config:
-        orm_mode = True
-
-
-class User(UserInDBBase):
-    joined_date: Optional[datetime]
-    last_login_date: Optional[datetime]
-
-
-class UserInDB(UserInDBBase):
-    hashed_password: str
-    joined_date: Optional[datetime]
-    last_login_date: Optional[datetime]
+class UserDB(User, models.BaseUserDB):
+    pass
