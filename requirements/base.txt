@@ -9,3 +9,4 @@ python-multipart==0.0.5
 fastapi-users[sqlalchemy,oauth]
 databases[postgresql]
 python-dotenv==0.15.0
+pika==1.1.0

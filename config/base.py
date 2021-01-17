@@ -2,6 +2,11 @@ import secrets
 from typing import Any, Dict, List, Optional, Union
 
 from pydantic import AnyHttpUrl, BaseSettings, PostgresDsn, validator
+from pydantic.networks import AnyUrl
+
+
+class RabbitmqDsn(AnyUrl):
+    allowed_schemes = {"amqp"}
 
 
 class Base(BaseSettings):
@@ -41,6 +46,22 @@ class Base(BaseSettings):
             password=values.get("POSTGRES_PASSWORD"),
             host=values.get("POSTGRES_HOST"),  # type: ignore
             path=f"/{values.get('POSTGRES_DB') or ''}",
+        )
+
+    RABBITMQ_USER: str
+    RABBITMQ_PASSWORD: str
+    RABBITMQ_HOST: str
+    RABBITMQ_URL: Optional[RabbitmqDsn] = None
+
+    @validator("RABBITMQ_URL", pre=True)
+    def assemble_rmq_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
+        if isinstance(v, str):
+            return v
+        return RabbitmqDsn.build(
+            scheme="amqp",
+            user=values.get("RABBITMQ_USER"),
+            password=values.get("RABBITMQ_PASSWORD"),
+            host=values.get("RABBITMQ_HOST"),  # type: ignore
         )
 
     FIRST_SUPERUSER: str
