@@ -2,7 +2,8 @@ name: DEPLOY
 
 on:
   push:
-  
+    branches: [ master ]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -40,5 +41,5 @@ jobs:
           port: 22
           script: |
             docker login -u ${{ github.repository_owner }} -p ${{ secrets.CR_PAT }} ghcr.io
-            docker-compose -f docker-compose.prod.yml pull
-            docker-compose -f docker-compose.prod.yml up -d
+            docker-compose -f ~/auth/docker-compose.prod.yml pull
+            docker-compose -f ~/auth/docker-compose.prod.yml up -d
