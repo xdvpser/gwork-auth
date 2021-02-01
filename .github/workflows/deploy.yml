@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       
-      - name: Copy files to remote server
+      - name: Copy compose file to the server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -21,6 +21,16 @@ jobs:
           port: 22
           source: "docker-compose.prod.yml"
           target: "~/auth"
+      
+      - name: Copy scripts folder to the server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          source: "scripts/"
+          target: "~/auth/scripts/"
 
       - name: Restart docker-compose
         uses: appleboy/ssh-action@v0.1.3
