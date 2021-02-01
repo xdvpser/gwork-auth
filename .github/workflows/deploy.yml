@@ -22,16 +22,6 @@ jobs:
           source: "docker-compose.prod.yml"
           target: "~/auth"
 
-      - name: Set environment variables
-        uses: appleboy/ssh-action@v0.1.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
-          script: |
-            echo "IMAGE=ghcr.io/${{ github.repository_owner }}/gwork" > .env
-
       - name: Restart docker-compose
         uses: appleboy/ssh-action@v0.1.3
         with:
