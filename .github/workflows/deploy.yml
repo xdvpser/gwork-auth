@@ -30,7 +30,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           source: "scripts/"
-          target: "~/auth/scripts/"
+          target: "~/auth/scripts"
 
       - name: Restart docker-compose
         uses: appleboy/ssh-action@v0.1.3
